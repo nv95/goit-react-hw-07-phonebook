@@ -1,11 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Li } from './ContactList.styled';
-import { removeContact } from 'store/slice';
+import { deleteContacts } from 'store/API/deleteContacts';
+import { useEffect } from 'react';
+import { fetchContacts } from 'store/API/getContacts';
 
 export default function ContactList() {
-  const contacts = useSelector(state => state.contacts.contacts);
+  const contacts = useSelector(state => state.contacts.items);
   const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(fetchContacts())
+  },[dispatch])
 
   const normalizedName = filter.toLowerCase();
   const contactsAll = contacts.filter(contact =>
@@ -18,7 +24,7 @@ export default function ContactList() {
         {contact.name}: {contact.number}
         <Button
           data-id={contact.id}
-          onClick={() => dispatch(removeContact(contact.id))}
+          onClick={() => dispatch(deleteContacts(contact.id))}
         >
           Delete
         </Button>
